@@ -1,0 +1,2 @@
+# TeslaCMP-MultiGraphicsManager
+解锁Tesla显卡的WDDM输出模式，更改多显卡调用
