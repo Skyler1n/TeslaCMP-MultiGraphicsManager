@@ -1,6 +1,7 @@
 # TeslaCMP-MultiGraphicsManager
 
-解锁Tesla显卡的WDDM输出模式，更改多显卡调用。（例如GeForce、Quadro、Tesla、CMP显卡共存，使用GeForce输出，使用Tesla渲染画面）
+解锁Tesla显卡的WDDM输出模式，更改多显卡调用。
+（例如将GeForce GTX750与Tesla M40 安装在同一台电脑上，使用GeForce输出显示画面，使用Tesla渲染游戏画面）
 
 ## 软件介绍
 
