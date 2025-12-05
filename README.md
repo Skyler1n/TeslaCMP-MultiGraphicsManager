@@ -15,13 +15,6 @@
 - **驱动下载**：快速访问显卡驱动下载页面
 - **关于本软件**：软件版本信息和开发者信息
 
-## 下载
-
-已编译好的可执行文件可在GitHub Release页面下载：
-
-[下载地址](https://github.com/Skyler1n/TeslaCMP-MultiGraphicsManager/releases)
-
-
 ## 使用说明
 
 1. 下载并运行可执行文件（需要管理员权限）
@@ -33,6 +26,17 @@
 - 软件需要管理员权限才能修改系统设置
 - 修改显卡设置前，请确保已备份重要数据
 - 修改以后需要重启系统才能生效
+
+## 下载
+
+已编译好的可执行文件可在GitHub Release页面下载：
+
+[下载地址](https://github.com/Skyler1n/TeslaCMP-MultiGraphicsManager/releases)
+
+## 软件截图
+![显卡设置界面](image/1.png)
+![DX设置界面](image/2.png)
+![使用说明界面](image/3.png)
 
 ## 系统要求
 
