@@ -54,6 +54,7 @@ def build_with_nuitka(output_dir):
             "--standalone",
             "--onefile",
             "--windows-console-mode=disable",
+            "--windows-uac-admin",
             "--enable-plugin=tk-inter",
             f"--include-data-file={os.path.abspath('ic_launcher.ico')}=ic_launcher.ico",
             f"--output-dir={output_dir}",
