@@ -189,6 +189,9 @@ class GraphicsCardManager:
         bottom_frame = tk.Frame(self.gl_frame, bg='#FFFFFF')
         bottom_frame.place(relx=0.05, rely=0.65, relwidth=0.9, relheight=0.3)
         
+        self.lbl_current_gl = new.NewLabel(size=10, text="当前设置的使用OpenGL渲染的显卡：正在读取...")
+        self.lbl_current_gl.place(in_=bottom_frame, relx=0.05, rely=0, anchor="nw")
+        
         new.NewButton(bottom_frame, text="强制使用选定 OpenGL 驱动", command=self.apply_gl_settings)[0].place(relx=0.3, rely=0.4, relwidth=0.45, anchor="center")
         
         btn_restore_frame, btn_restore = new.NewButton(bottom_frame, text="还原 OpenGL 默认设置", command=self.restore_gl_settings)
@@ -358,20 +361,21 @@ class GraphicsCardManager:
         
         create_instruction_card("场景 2: NVIDIA 独显 (接显示器) + NVIDIA 计算卡", [
             "设置 NVIDIA 独显 (亮机卡) 为：节能模式",
-            "设置 NVIDIA 计算卡为：高性能模式"
+            "设置 NVIDIA 计算卡为：高性能模式\n\n"
+            "然后打开NVIDIA控制面板-管理3D设置\n找到OpenGL渲染GPUs选项，将其更改为计算卡。\n"
         ])
         
         create_instruction_card("场景 3: AMD 独显 (接显示器) + NVIDIA 计算卡", [
             "设置 AMD 独显为：高性能模式",
-            "设置 NVIDIA 计算卡为：节能模式\n\n"
-            "然后使用本软件的DirectX、OpenGL设置指定调用的显卡\n"
-            "Win11 可以在显示设置 > 图形设置中手动添加应用并指定GPU。"
+            "设置 NVIDIA 计算卡为：节能模式\n\n然后按照下面 如何指定GPU优先级的教程进行操作\n\n"
+            "若上述方法无效，请还原节能高性能设置\n然后使用本软件的DirectX、OpenGL设置指定调用的显卡\n"
+            "\n对于 GCN架构以前 的AMD显卡（如Radeon HD 5450）\n最好使用Win 11和AMD官网2016年的Crimson Edition 16.2.1 Beta驱动\n然后使用本软件配置高性能节能显卡、DirectX首选卡和OpenGL首选卡。"
         ])
 
         create_header("系统版本差异", "💻")
         create_info_block("如何指定 GPU 优先级：", {
-            "Win 11": "在“系统设置 > 显示设置 > 图形设置”中，手动添加游戏/应用，\n并指定优先调用的 GPU。",
-            "Win 10": "使用本软件的“DirectX 设置”和“OpenGL 设置”强制指定显卡。"
+            "24H2+": "在“系统设置 > 显示设置 > 图形设置”中，直接指定全局GPU。",
+            "23H2-": "在“系统设置 > 显示设置 > 图形设置”中，手动添加游戏/应用，\n并指定优先调用的 GPU。"
         })
 
         create_header("特殊硬件说明", "🔩")
@@ -380,13 +384,13 @@ class GraphicsCardManager:
         })
         
         create_info_block("CMP 矿卡 (P106, 30HX, 40HX 等)：", {
-            "魔改驱动": "使用雨糖等魔改驱动：不需要勾选解锁 WDDM。",
-            "官方驱动": "使用 41x 等官方驱动：必须勾选解锁 WDDM。"
+            "魔改驱动": "使用雨糖大佬的魔改驱动：不需要勾选解锁 WDDM。",
+            "官方驱动": "使用 39x 41x 等官方驱动：必须勾选解锁 WDDM。"
         })
 
         create_header("测试与排错", "🩺")
         
-        test_lbl = tk.Label(scrollable_frame, text="• 推荐使用图吧工具箱的 FurMark和FurMark2 (甜甜圈) 进行烤机和调用测试。\n• 若无法调用，请检查 NVIDIA 控制面板 3D 设置中的 OpenGL 渲染 GPU 选项。", 
+        test_lbl = tk.Label(scrollable_frame, text="• 推荐使用图吧工具箱的 FurMark 和 FurMark2 (甜甜圈) 进行烤机和调用测试。\n• 若无法调用，请检查 NVIDIA 控制面板 3D 设置中的 OpenGL 渲染 GPU 选项。", 
                 font=('微软雅黑', 9), bg='#FFFFFF', fg='#444444', justify='left', anchor='w', padx=25)
         test_lbl.pack(fill='x')
         self.wrap_labels.append(test_lbl)
@@ -531,11 +535,11 @@ class GraphicsCardManager:
 
         # [资源下载]
         create_header("资源下载", "💾")
+        create_link_box(f"RainCandy 雨糖魔改驱动，双签名模式 (P106/30HX/40HX首选)", "https://raincandy.tech/nvcmpgpu/", "对CMP系列矿卡解锁了WDDM限制，非常适合无头矿卡使用。")
         create_link_box("Skyler1n 官方整合驱动，NV官方驱动签名 (Tesla+GeForce首选)", "https://www.123865.com/s/mHIrVv-9Q0OA?pwd=Ox1f#", "提取码: Ox1f，适合绝大多数Tesla计算卡和其他N卡共存驱动。")
-        create_link_box(f"RainCandy 雨糖魔改驱动，双签名模式 (P106/30HX/40HX首选)", "https://raincandy.tech/nvcmpgpu/", "对CMP系列显卡解锁了WDDM限制，有可能无法通过反作弊系统。")
 
         # [官方驱动]
-        create_header("驱动说明", "📝")
+        create_header("Skyler1n 整合驱动说明", "📝")
         
         # 数据结构改为: (版本号, 核心支持范围, 详细描述)
         drivers = [
@@ -600,7 +604,7 @@ class GraphicsCardManager:
         # 版本号 (胶囊样式)
         ver_frame = tk.Frame(header_frame, bg='#E8F0FE', padx=10, pady=2)
         ver_frame.pack(pady=(5, 0))
-        tk.Label(ver_frame, text="Version 1.0", font=('微软雅黑', 9, 'bold'), 
+        tk.Label(ver_frame, text="Version 1.1", font=('微软雅黑', 9, 'bold'), 
                  bg='#E8F0FE', fg='#005A9E').pack()
 
         # 分割线
@@ -666,9 +670,9 @@ class GraphicsCardManager:
         footer_frame = tk.Frame(center_frame, bg='#FFFFFF')
         footer_frame.pack(fill='x', pady=(10, 0))
         
-        tk.Label(footer_frame, text="数据来源参考: nethe-GitHub", 
+        tk.Label(footer_frame, text="OpenGL和DirectX相关代码参考: nethe-GitHub", 
                  font=('微软雅黑', 8), bg='#FFFFFF', fg='#999999').pack()
-        tk.Label(footer_frame, text="Copyright © 2024 Skyler1n. All Rights Reserved.", 
+        tk.Label(footer_frame, text="Copyright © 2026 Skyler1n. All Rights Reserved.", 
                  font=('微软雅黑', 8), bg='#FFFFFF', fg='#999999').pack(pady=(2, 0))
 
     def show_tab(self, tab_name):
@@ -766,10 +770,10 @@ class GraphicsCardManager:
                     try: winreg.DeleteValue(key, "EnableMsHybrid")
                     except: pass
                 else:
-                    winreg.SetValueEx(key, "EnableMsHybrid", 0, winreg.REG_DWORD, 6 if mode == 1 else 1)
+                    winreg.SetValueEx(key, "EnableMsHybrid", 0, winreg.REG_DWORD, ctypes.c_uint32(6 if mode == 1 else 1).value)
                 if self.unlock_var.get():
-                    winreg.SetValueEx(key, "GridLicensedFeatures", 0, winreg.REG_DWORD, 7)
-                    winreg.SetValueEx(key, "AdapterType", 0, winreg.REG_DWORD, 1)
+                    winreg.SetValueEx(key, "GridLicensedFeatures", 0, winreg.REG_DWORD, ctypes.c_uint32(7).value)
+                    winreg.SetValueEx(key, "AdapterType", 0, winreg.REG_DWORD, ctypes.c_uint32(1).value)
                 else:
                     try: winreg.DeleteValue(key, "GridLicensedFeatures")
                     except: pass
@@ -931,6 +935,24 @@ class GraphicsCardManager:
                     except OSError: break
                     i += 1
         except Exception: pass
+        
+        # 读取当前OpenGL设置
+        current_gl_driver = "系统默认 / 未配置"
+        try:
+            gl_global_path = r"SOFTWARE\Microsoft\Windows NT\CurrentVersion\OpenGLDrivers\MSOGL"
+            with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, gl_global_path) as key:
+                try:
+                    dll_path = winreg.QueryValueEx(key, "DLL")[0]
+                    # 查找对应的显卡名称
+                    for desc, path, dll, wow in self.gl_cards:
+                        if dll.lower() in dll_path.lower() or dll_path.lower() in dll.lower():
+                            current_gl_driver = desc
+                            break
+                except FileNotFoundError: pass
+        except FileNotFoundError: pass
+        
+        if hasattr(self, 'lbl_current_gl'):
+            self.lbl_current_gl.config(text=f"当前设置的使用OpenGL渲染的显卡：{current_gl_driver}")
 
     def apply_gl_settings(self):
         selection = self.gl_listbox.curselection()
@@ -944,24 +966,24 @@ class GraphicsCardManager:
             key64 = winreg.CreateKeyEx(winreg.HKEY_LOCAL_MACHINE, gl_global_path, 0, winreg.KEY_SET_VALUE | winreg.KEY_WOW64_64KEY)
             with key64:
                 # 写入全局设置，路径直接写入 REG_SZ
-                winreg.SetValueEx(key64, "DLL", 0, winreg.REG_SZ, sel_dll)
-                winreg.SetValueEx(key64, "DriverVersion", 0, winreg.REG_DWORD, 1)
-                winreg.SetValueEx(key64, "Version", 0, winreg.REG_DWORD, 2)
-                winreg.SetValueEx(key64, "Flags", 0, winreg.REG_DWORD, 3)
+                winreg.SetValueEx(key64, "DLL", 0, winreg.REG_SZ, str(sel_dll))
+                winreg.SetValueEx(key64, "DriverVersion", 0, winreg.REG_DWORD, ctypes.c_uint32(1).value)
+                winreg.SetValueEx(key64, "Version", 0, winreg.REG_DWORD, ctypes.c_uint32(2).value)
+                winreg.SetValueEx(key64, "Flags", 0, winreg.REG_DWORD, ctypes.c_uint32(3).value)
             
             if sel_dll_wow:
                 key32 = winreg.CreateKeyEx(winreg.HKEY_LOCAL_MACHINE, gl_global_path, 0, winreg.KEY_SET_VALUE | winreg.KEY_WOW64_32KEY)
                 with key32:
-                    winreg.SetValueEx(key32, "DLL", 0, winreg.REG_SZ, sel_dll_wow)
-                    winreg.SetValueEx(key32, "DriverVersion", 0, winreg.REG_DWORD, 1)
-                    winreg.SetValueEx(key32, "Version", 0, winreg.REG_DWORD, 2)
-                    winreg.SetValueEx(key32, "Flags", 0, winreg.REG_DWORD, 3)
+                    winreg.SetValueEx(key32, "DLL", 0, winreg.REG_SZ, str(sel_dll_wow))
+                    winreg.SetValueEx(key32, "DriverVersion", 0, winreg.REG_DWORD, ctypes.c_uint32(1).value)
+                    winreg.SetValueEx(key32, "Version", 0, winreg.REG_DWORD, ctypes.c_uint32(2).value)
+                    winreg.SetValueEx(key32, "Flags", 0, winreg.REG_DWORD, ctypes.c_uint32(3).value)
 
             # 屏蔽单卡设置
             for name, path, dll, dll_wow in self.gl_cards:
                 with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, path, 0, winreg.KEY_SET_VALUE | winreg.KEY_WOW64_64KEY) as key:
-                    winreg.SetValueEx(key, "_OpenGLDriverName", 0, winreg.REG_SZ, dll)
-                    if dll_wow: winreg.SetValueEx(key, "_OpenGLDriverNameWow", 0, winreg.REG_SZ, dll_wow)
+                    winreg.SetValueEx(key, "_OpenGLDriverName", 0, winreg.REG_SZ, str(dll))
+                    if dll_wow: winreg.SetValueEx(key, "_OpenGLDriverNameWow", 0, winreg.REG_SZ, str(dll_wow))
                     try: winreg.DeleteValue(key, "OpenGLDriverName")
                     except: pass
                     try: winreg.DeleteValue(key, "OpenGLDriverNameWow")
